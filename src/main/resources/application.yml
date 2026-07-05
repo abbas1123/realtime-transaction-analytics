@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: realtime-transaction-analytics
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    streams:
+      application-id: transaction-analytics
+      properties:
+        commit.interval.ms: 1000
+    consumer:
+      group-id: alerts-dashboard
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "io.github.abbas1123.analytics.*"
+        spring.json.value.default.type: io.github.abbas1123.analytics.model.FraudAlert
+
+analytics:
+  window: PT1M
+  velocity-threshold: 5
+  amount-threshold: 1000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8081
+
+logging:
+  level:
+    io.github.abbas1123.analytics: INFO
